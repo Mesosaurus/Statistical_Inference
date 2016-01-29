@@ -36,7 +36,7 @@ mean (x)
 ```
 
 ```
-## [1] 5.002582
+## [1] 5.017773
 ```
 
 The expected value or mean is a property of a distribution. It is the center of mass of that distrubution. In this case, the sample mean is extremely close to the theoretical mean of 5.0. That makes sense, since the sample mean is trying to estimate the population or theoretical mean. Hence, the center of distribution of the sample mean is the same as that of the original distribution, and we can say that the sample mean is unbiased because its distribution is centered at what it is trying to estiamate. We call the sample mean an unbiased estimate of the mean of the population from which the sample is drawn. 
@@ -65,7 +65,7 @@ var2
 ```
 
 ```
-## [1] 0.628208
+## [1] 0.6170493
 ```
 
 Like the mean, the sample variance is close to the theoretical variance for sample size n = 40. The sample variance is also an unbiased estimator of the theoretical variance.
