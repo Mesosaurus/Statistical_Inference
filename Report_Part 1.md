@@ -1,0 +1,108 @@
+---
+title: "Statistical Inference Peer Assessment - Central Limit Theorem"
+author: "Stephen Lee"
+date: "January 26, 2016"
+---
+
+##Overview
+In this assignment, we will investigate the exponential distribution of 1000 averages of sample size n in R and compare it with the Central Limit Theorem. We will also compare this exponential distribution with the distribution of a large collection of random exponentials.
+
+
+##Theory
+Commonly used to model elapsed time before a given event occurs, the exponential distribution can be applied in this example scenario: Suppose there is a long queue in a bank. Given an average wait in line (expected duration) or rate lambda (which is the inverse of the average), how long will the next customer in line have to wait to see the bank teller? The unknown waiting time is the random variable in the exponential distribution, which can be used to predict the probability of the bank customer having to wait less than 'x' minutes, or more than 'y' minutes.
+
+
+##Simulations
+####Question 1: Show the sample mean and compare it to the theoretical mean of the distribution.
+
+The mean of the exponential distribution is 1/lambda. Since lambda = 0.2, the theoretical mean = 5.
+
+Now, let's create a distribution of 1000 averages of 40 random exponentials. The simulation code below (1) generates 40*1000 or 40000 random exponentials; (2) puts the data in a matrix containing 10000 rows and 40 columns; (3) calculates the mean for each row. The sample mean is highlighted via the red vertical line.
+
+
+```r
+set.seed = 1100
+nosim = 1000
+x <- apply (matrix (rexp (40 * nosim, rate = 0.2), nosim), 1, mean)
+
+hist(x, xlab = "Average Exponentials", ylab = "Density", col = "lightblue", main = "Distribution of 1000 Avg Exponentials (n = 40)")
+abline (v = mean (x), lwd = 4, col = "red")
+```
+
+![plot of chunk unnamed-chunk-1](figure/unnamed-chunk-1-1.png) 
+
+```r
+mean (x)
+```
+
+```
+## [1] 5.002582
+```
+
+The expected value or mean is a property of a distribution. It is the center of mass of that distrubution. In this case, the sample mean is extremely close to the theoretical mean of 5.0. That makes sense, since the sample mean is trying to estimate the population or theoretical mean. Hence, the center of distribution of the sample mean is the same as that of the original distribution, and we can say that the sample mean is unbiased because its distribution is centered at what it is trying to estiamate. We call the sample mean an unbiased estimate of the mean of the population from which the sample is drawn. 
+
+
+
+####Question 2: Show how variable the sample is (via variance) and compare it to the theoretical variance of the distribution.
+
+The theoretical variance of an exponential distribution with rate = 0.2 and sample size n is sigma^2/n. The standard deviation is equal to the inverse of the rate, 1/lambda.
+
+
+```r
+n = 40; lambda = 0.2; var1 <- (1/0.2^2)/40
+var1
+```
+
+```
+## [1] 0.625
+```
+
+Now calculate the sample variance of the distribution of averages.
+
+```r
+var2 <- var (x)
+var2
+```
+
+```
+## [1] 0.628208
+```
+
+Like the mean, the sample variance is close to the theoretical variance for sample size n = 40. The sample variance is also an unbiased estimator of the theoretical variance.
+
+
+
+####Question 3: Show that the distribution is approximately normal.
+
+First, let's generate 1000 random numbers for the exponential distribution with lambda = 0.2, and plot a histogram.
+
+
+```r
+set.seed = 1100
+random <- rexp (n = 1000, rate = 0.2)
+hist (random, xlab = "Random Exponentials", ylab = "Frequency", col = "lightgreen", main = "Distribution of 1000 Random Exponentials")
+```
+
+![plot of chunk unnamed-chunk-4](figure/unnamed-chunk-4-1.png) 
+
+Now, let's recreate the histogram plot for our distribution of sample averages. We will also add 2 normal curves on the plot. The first curve is the theoretical curve created using the minimum and maximum sample average, with a sequence length = 100. The second curve is the actual normal curve modeled by the average simulation distribution, i.e. using all of our 1000 simulated sample averages.
+
+
+```r
+hist(x, xlab = "Average Exponentials", ylab = "Density", col = "lightblue", main = "Distribution of 1000 Avg Exponentials (n = 40)", prob = TRUE)
+lines (density(x), col = "black", lwd = 3, lty = 1)
+
+lambda = 0.2
+xnorm <- seq (min(x), max (x), length = 1000)
+ynorm <- dnorm (xnorm, mean = 1/lambda, sd = 1/lambda/sqrt(40))
+lines (xnorm, ynorm, col = "red", lwd = 3, lty = 1)
+legend ("topright", col = c("black", "red"), lwd = 1, lty = 1, bty = "o",
+	legend = c ("Simulation Curve", "Theoretical Curve"), cex = 0.5) 
+```
+
+![plot of chunk unnamed-chunk-5](figure/unnamed-chunk-5-1.png) 
+
+It is clear from the plots that the distribution of a 1000 averages of 40 exponentials looks far more Gaussian than the exponential distribution of 1000 random exponentials, which is heavily skewed to the right. This experiment validates the Central Limit Theorem, which states that the distribution of averages of a sample size n approaches a normal distribution as n gets larger.
+
+
+
